@@ -1,2 +1,2 @@
-# Weathe-Redux-App
+# Weather-Redux-App
  
