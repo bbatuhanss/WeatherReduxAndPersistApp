@@ -1,16 +1,24 @@
 const initialState = {
-  users: [],
+  weatherData: {
+    main: '',
+    description: '',
+    temp: '',
+    name: '',
+    humidity: '',
+    visibility: '',
+    icon: '',
+  },
 };
- const globalReducer = (state = initialState, action) => {
+const weatherReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'weather':
       return {
         ...state,
-        users: action.users,
+        weatherData: action.weatherData,
       };
     default:
       return state;
   }
 };
 
-export default globalReducer;
+export default weatherReducer;

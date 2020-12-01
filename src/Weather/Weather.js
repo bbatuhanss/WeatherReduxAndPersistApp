@@ -11,57 +11,77 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import { loadUsers } from '../actions/actions';
+import {getCurrentWeather} from '../Network/weatherServices';
 
 const Dev_Height = Dimensions.get('window').height;
 const Dev_Width = Dimensions.get('window').width;
 
 const WeatherComponent = () => {
-  const users = useSelector(state => state.contacts.users);
+  const weatherInformation = useSelector((state) => state.weather.weatherData);
   const dispatch = useDispatch();
-  const [cityName,setCity] = useState('');
+  const [cityName, setCity] = useState('');
   const changeEvent = async (newEvent) => {
-    dispatch(loadUsers(newEvent));
+    dispatch(getCurrentWeather(newEvent));
   };
-    return (
-      <View style={styles.container} >
-        <StatusBar translucent={true} backgroundColor="#000" />
-        <ImageBackground
-          source={require('./image.png')}
-          style={styles.Image_Background_Style}>
-          <View style={styles.Search_Box_View} >
-            <TextInput
-              placeholder="Search"
-              placeholderTextColor="#FFF"
-              style={styles.Search_Box}
-              onChangeText={(text)=>setCity(text)}
-            />
+  return (
+    <View style={styles.container}>
+      <StatusBar translucent={true} backgroundColor="#000" />
+      <ImageBackground
+        source={require('./image.png')}
+        style={styles.Image_Background_Style}>
+        <View style={styles.Search_Box_View}>
+          <TextInput
+            placeholder="Search"
+            placeholderTextColor="#FFF"
+            style={styles.Search_Box}
+            onChangeText={(text) => setCity(text)}
+          />
 
-            <TouchableOpacity style={styles.button_touch} onPress={() => changeEvent(cityName)} >
-              <Image source={require('./search.png')} style={styles.iconStyle} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.Weather_Box_Main}>
+          <TouchableOpacity
+            style={styles.button_touch}
+            onPress={() => changeEvent(cityName)}>
+            <Image source={require('./search.png')} style={styles.iconStyle} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.Weather_Box_Main}>
           <View style={styles.Weather_Holder_View}>
-            <Image tintColor="#FFF" source={{uri:'http://openweathermap.org/img/wn/' + users.weather[0].icon + '@2x.png'}} style={styles.Weather_Image}/>
+            <Image
+              tintColor="#FFF"
+              source={{
+                uri:
+                  'http://openweathermap.org/img/wn/' +
+                  weatherInformation.icon +
+                  '@2x.png',
+              }}
+              style={styles.Weather_Image}
+            />
             <View>
-              <Text style={styles.temprature_text}>{(users.main.temp - 273.15).toFixed(2) + ' °C' }</Text>
-              <Text style={styles.city_text}>{users.name}</Text>
+              <Text style={styles.temprature_text}>
+                {weatherInformation.temp}
+              </Text>
+              <Text style={styles.city_text}>{weatherInformation.name}</Text>
             </View>
           </View>
         </View>
         <View style={styles.Info_Box_View}>
           <View style={styles.Info_Holder_Veiw}>
-            <Text style={styles.Main_Weather_Text}>{users.weather[0].main}</Text>
-            <Text style={styles.description_text}>{users.weather[0].description}</Text>
-            <Text style={styles.humidity_text}>Humidity : { users.main.humidity + ' %'}</Text>
-            <Text style={styles.other_text}>Visibility : {( users.visibility / 1000).toFixed(2) + ' KM'}</Text>
+            <Text style={styles.Main_Weather_Text}>
+              {weatherInformation.main}
+            </Text>
+            <Text style={styles.description_text}>
+              {weatherInformation.description}
+            </Text>
+            <Text style={styles.humidity_text}>
+              Humidity : {weatherInformation.humidity}
+            </Text>
+            <Text style={styles.other_text}>
+              Visibility : {weatherInformation.visibility}
+            </Text>
           </View>
         </View>
-        </ImageBackground>
-      </View>
-    );
-
+      </ImageBackground>
+    </View>
+  );
 };
 const styles = StyleSheet.create({
   container: {
@@ -170,7 +190,5 @@ const styles = StyleSheet.create({
     marginTop: '2%',
   },
 });
-
-
 
 export default WeatherComponent;
